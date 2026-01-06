@@ -1,0 +1,6 @@
+streamlit
+pandas
+pydantic
+requests
+beautifulsoup4
+googlesearch-python
