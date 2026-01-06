@@ -4,7 +4,7 @@
 
 **Lead Lattice** is an autonomous AI agent that identifies, enriches, and ranks high-value leads for **3D In-Vitro Model** products. It scrapes scientific literature (PubMed) to find researchers actively working on relevant topics (DILI, Organ-on-chip) and scores them based on their likelihood to purchase.
 
-## 🚀 Features
+## Features
 *   **Real-Time Scraping**: Fetches recent publications from PubMed.
 *   **Propensity Scoring**: Ranks leads (0-100) based on Role, Funding, Tech Stack, and Location.
 *   **Dual Dashboard**: visualize leads in a premium **Next.js** app or a lightweight **Streamlit** dashboard.
@@ -12,7 +12,7 @@
 
 ---
 
-## 🛠️ Installation
+## Installation
 
 ### 1. Python Environment (Backend)
 Install the required Python dependencies:
@@ -30,7 +30,7 @@ cd ..
 
 ---
 
-## 🏃 Usage
+## Usage
 
 ### Step 1: Generate Leads
 You have two modes of operation:
@@ -64,7 +64,7 @@ streamlit run streamlit_app.py
 
 ---
 
-## ☁️ Deployment (Streamlit Cloud)
+## Deployment (Streamlit Cloud)
 To deploy the dashboard online for free:
 1.  Push your code to **GitHub**.
 2.  Go to **[share.streamlit.io](https://share.streamlit.io)**.
@@ -73,7 +73,7 @@ To deploy the dashboard online for free:
 
 ---
 
-## 🧬 Scoring Logic
+## Scoring Logic
 The AI assigns points based on the following weighted signals (Max 100):
 
 | Category | Criteria | Points |
