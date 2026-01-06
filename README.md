@@ -1,32 +1,87 @@
 # Lead Lattice - AI Lead Generation Agent
 
-This system autonomously identifies, enriches, and ranks leads for 3D In-Vitro Model therapies.
+[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://leadlattice.streamlit.app/#prioritized-leads)
 
-## Project Structure
-- `agent/`: Python-based Probability Engine & Data Generator.
-- `dashboard/`: Next.js Web Application for visualization.
+**Lead Lattice** is an autonomous AI agent that identifies, enriches, and ranks high-value leads for **3D In-Vitro Model** products. It scrapes scientific literature (PubMed) to find researchers actively working on relevant topics (DILI, Organ-on-chip) and scores them based on their likelihood to purchase.
 
-## Prerequisites
-- Python 3.8+
-- Node.js 18+
+## 🚀 Features
+*   **Real-Time Scraping**: Fetches recent publications from PubMed.
+*   **Propensity Scoring**: Ranks leads (0-100) based on Role, Funding, Tech Stack, and Location.
+*   **Dual Dashboard**: visualize leads in a premium **Next.js** app or a lightweight **Streamlit** dashboard.
+*   **Stratified Sampling**: Delivers a balanced list of top-tier and mid-tier candidates.
 
-## Quick Start
-### 1. Generate Leads (Agent)
-The agent generates 500+ realistic mock leads and ranks them using the "Propensity to Buy" logic.
+---
 
+## 🛠️ Installation
+
+### 1. Python Environment (Backend)
+Install the required Python dependencies:
 ```bash
-cd agent
-python main.py
+pip install -r requirements.txt
 ```
-This outputs `leads_ranked.json` and automatically simulates the pipeline.
 
-### 2. Run Dashboard
-Launch the interface to explore the leads.
-
+### 2. Node.js Environment (Dashboard)
+Install the frontend dependencies:
 ```bash
 cd dashboard
-npm install # If not already installed
-npm run dev
+npm install
+cd ..
 ```
 
-Open [http://localhost:3000](http://localhost:3000) in your browser.
+---
+
+## 🏃 Usage
+
+### Step 1: Generate Leads
+You have two modes of operation:
+
+**Option A: Real Data (Recommended)**
+Scrapes actual PubMed data, extracts emails/affiliations, and ranks candidates.
+```bash
+python -m agent.main_real
+```
+*Output: Generates `dashboard/public/leads_data.json` with ~500 balanced leads.*
+
+**Option B: Mock Data (Testing)**
+Generates synthetic data for quick UI testing.
+```bash
+python -m agent.main
+```
+
+### Step 2: View Dashboard (Next.js)
+Launch the premium web interface:
+```bash
+cd dashboard
+npm run dev
+```
+Open **[http://localhost:3000](http://localhost:3000)** to view the table, sort by Probability, and export to CSV.
+
+### Step 3: Streamlit App (Alternative)
+Run the lightweight analytics dashboard:
+```bash
+streamlit run streamlit_app.py
+```
+
+---
+
+## ☁️ Deployment (Streamlit Cloud)
+To deploy the dashboard online for free:
+1.  Push your code to **GitHub**.
+2.  Go to **[share.streamlit.io](https://share.streamlit.io)**.
+3.  Connect your repo and select `streamlit_app.py` as the main file.
+4.  Click **Deploy**.
+
+---
+
+## 🧬 Scoring Logic
+The AI assigns points based on the following weighted signals (Max 100):
+
+| Category | Criteria | Points |
+| :--- | :--- | :--- |
+| **Scientific Intent** | Published on **DILI**, **3D Culture**, **Organ-on-chip** | **+40** (Very High) |
+| **Role Fit** | Title/Dept contains **Toxicology**, **Safety**, **Hepatic** | **+30** (High) |
+| **Company Intent** | Recent **Series A/B** Funding | **+20** (High) |
+| **Technographic** | Uses **In-Vitro** methods (+15) and Open to **NAMs** (+10) | **+25** (Medium) |
+| **Location** | Located in a Biotech Hub (Boston, Basel, UK, etc.) | **+10** (Medium) |
+
+*Leads with a score > 80 are marked as **Highest Priority**.*
