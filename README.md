@@ -1,6 +1,6 @@
 # Lead Lattice - AI Lead Generation Agent
 
-[![Streamlit App](https://static.streamlit.io/badges/streamlit_badge_black_white.svg)](https://leadlattice.streamlit.app/#prioritized-leads)
+**Live Demo:** [https://leadlattice.streamlit.app/#prioritized-leads](https://leadlattice.streamlit.app/#prioritized-leads)
 
 **Lead Lattice** is an autonomous AI agent that identifies, enriches, and ranks high-value leads for **3D In-Vitro Model** products. It scrapes scientific literature (PubMed) to find researchers actively working on relevant topics (DILI, Organ-on-chip) and scores them based on their likelihood to purchase.
 
@@ -64,14 +64,7 @@ streamlit run streamlit_app.py
 
 ---
 
-## Deployment (Streamlit Cloud)
-To deploy the dashboard online for free:
-1.  Push your code to **GitHub**.
-2.  Go to **[share.streamlit.io](https://share.streamlit.io)**.
-3.  Connect your repo and select `streamlit_app.py` as the main file.
-4.  Click **Deploy**.
 
----
 
 ## Scoring Logic
 The AI assigns points based on the following weighted signals (Max 100):
