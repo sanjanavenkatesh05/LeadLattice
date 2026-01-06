@@ -149,8 +149,38 @@ def main():
     ranker = ProbabilityEngine()
     ranked_leads = ranker.rank_leads(leads)
     
-    # Keep only Top 500 highest scoring leads
-    ranked_leads = ranked_leads[:500]
+    # Stratified Sampling: User wants to see range (100+ from each tier)
+    tiers = {"Highest": [], "High": [], "Medium": [], "Low": []}
+    for lead in ranked_leads:
+        if lead.rank_tier in tiers:
+            tiers[lead.rank_tier].append(lead)
+            
+    final_leads = []
+    # Try to pick 125 from each tier to get ~500 diverse leads
+    target_per_tier = 125
+    
+    # Track which leads are added to avoid duplicates if we backfill
+    added_ids = set()
+    
+    for tier_name in ["Highest", "High", "Medium", "Low"]:
+        candidates = tiers[tier_name]
+        # Sort by score within tier just in case
+        candidates.sort(key=lambda x: x.score, reverse=True)
+        
+        selection = candidates[:target_per_tier]
+        final_leads.extend(selection)
+        for l in selection:
+            added_ids.add(l.id)
+            
+    # If we have shortage (e.g. not enough Low tier), fill up with best remaining leads
+    if len(final_leads) < 500:
+        remaining = [l for l in ranked_leads if l.id not in added_ids]
+        needed = 500 - len(final_leads)
+        final_leads.extend(remaining[:needed])
+        
+    # Final Sort
+    final_leads.sort(key=lambda x: x.score, reverse=True)
+    ranked_leads = final_leads[:500]
     
     # 4. Save
     output_file = "dashboard/public/leads_data.json"
