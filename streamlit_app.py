@@ -74,26 +74,40 @@ def load_data():
     # Load logic - Try to load from json, else generate
     json_path = "dashboard/public/leads_data.json"
     
+    data = []
     if os.path.exists(json_path):
         with open(json_path, "r") as f:
             data = json.load(f)
-            return pd.DataFrame(data)
     else:
         # Fallback to generating live if file missing
         gen = DataGenerator()
         leads = gen.generate_sample_leads(100)
         ranker = ProbabilityEngine()
         ranked = ranker.rank_leads(leads)
-        
-        # Flatten for display
-        flat_data = []
-        for l in ranked:
-            item = l.model_dump()
+        data = [l.model_dump() for l in ranked]
+
+    if not data:
+        return pd.DataFrame()
+
+    # Flatten logic
+    flat_data = []
+    for item in data:
+        # Ensure company is a dict (it should be)
+        if 'company' in item and isinstance(item['company'], dict):
             comp = item.pop('company')
             item.update({f"company_{k}": v for k, v in comp.items()})
-            flat_data.append(item)
+        
+        flat_data.append(item)
             
-        return pd.DataFrame(flat_data)
+    df = pd.DataFrame(flat_data)
+    
+    # Ensure critical columns exist (migration safety)
+    if 'email' not in df.columns:
+        df['email'] = 'Unavailable'
+    if 'location_person' not in df.columns:
+        df['location_person'] = 'Unknown'
+        
+    return df
 
 st.title("🧬 LeadLattice")
 st.caption("AI-Powered Lead Identification & Ranking System")
