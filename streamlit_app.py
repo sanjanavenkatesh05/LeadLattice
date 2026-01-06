@@ -126,7 +126,7 @@ if not df.empty:
     # Formatting for display
     display_cols = [
         'score', 'rank_tier', 'name', 'title', 'company_name', 
-        'location_person', 'company_funding_stage', 'linkedin_url'
+        'location_person', 'email', 'linkedin_url'
     ]
     
     # Renaming for cleaner table
@@ -137,13 +137,13 @@ if not df.empty:
         'name': 'Name',
         'title': 'Title',
         'location_person': 'Location',
-        'company_funding_stage': 'Funding',
+        'email': 'Email',
         'linkedin_url': 'LinkedIn'
     })
     
     # Make LinkedIn clickable (trickier in st.dataframe, easier in st.data_editor with column config)
     st.data_editor(
-        display_df[['Prob %', 'Rank', 'Name', 'Title', 'Company', 'Location', 'Funding', 'LinkedIn']],
+        display_df[['Prob %', 'Rank', 'Name', 'Title', 'Company', 'Location', 'Email', 'LinkedIn']],
         column_config={
             "Prob %": st.column_config.ProgressColumn(
                 "Probability",
