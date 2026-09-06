@@ -1,8 +1,14 @@
 from googlesearch import search
-import time
+from .http_client import HttpClient
 import random
 
 class LinkedInDiscoverer:
+    """Discover LinkedIn profiles using Google Search with resilient request handling."""
+
+    def __init__(self):
+        # Initialise a reusable HTTP client (default retries & rate‑limiting)
+        self.client = HttpClient()
+
     """
     Uses Google Search to find LinkedIn profiles for names and companies.
     Note: This depends on the 'googlesearch-python' library.
@@ -23,7 +29,7 @@ class LinkedInDiscoverer:
         
         try:
             # Pause to be polite and avoid rate limits
-            time.sleep(random.uniform(2.0, 5.0))
+            self.client._rate_limit_delay()
             
             # Search for top 1 result
             # num_results=1 is part of the generator config in newer versions, or we just take next()
@@ -48,7 +54,7 @@ class LinkedInDiscoverer:
     def find_company_linkedin(self, company_name: str) -> str:
         query = f'site:linkedin.com/company "{company_name}"'
         try:
-            time.sleep(random.uniform(1.5, 3.0))
+            self.client._rate_limit_delay()
             results = search(query, num_results=1)
             for url in results:
                 if "linkedin.com/company" in url:

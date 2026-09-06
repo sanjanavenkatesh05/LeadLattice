@@ -66,13 +66,13 @@ def extract_leads_from_papers(papers: List[dict], max_leads: int = 20) -> List[L
                 # Clean up company name roughly
                 company_name = company_name_raw.replace('.', '')
                 
-                print(f"🎯 Candidate: {author_name} @ {company_name}")
+                print(f"Candidate: {author_name} @ {company_name}")
                 
                 linkedin_url = ""
                 if not SKIP_LINKEDIN:
                      # Try to find LinkedIn
-                    found_url = discoverer.find_profile(author_name, company=company_name)
-                    if found_url:
+                     found_url = LinkedInDiscoverer().find_profile(author_name, company=company_name)
+                     if found_url:
                         linkedin_url = found_url.replace("https://", "").replace("http://", "")
                     
                 if not linkedin_url:
@@ -131,7 +131,7 @@ def extract_leads_from_papers(papers: List[dict], max_leads: int = 20) -> List[L
     return leads
 
 def main():
-    print("🚀 Starting Real Data Lead Generation Agent...")
+    print("Starting Real Data Lead Generation Agent...")
     
     # 1. PubMed Search
     pubmed = PubMedScraper()

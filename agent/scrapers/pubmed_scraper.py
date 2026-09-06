@@ -3,6 +3,7 @@ import re
 import xml.etree.ElementTree as ET
 from datetime import datetime
 from typing import List, Dict, Optional
+from .http_client import HttpClient
 
 class PubMedScraper:
     """
@@ -11,10 +12,16 @@ class PubMedScraper:
     """
     
     BASE_URL = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
-    
+
+    # Use reusable HTTP client with retries, headers and rate‑limiting
+    try:
+        from .http_client import HttpClient
+    except ImportError:  # fallback when executed as a script
+        from http_client import HttpClient
     def __init__(self, email: str = "agent@leadlattice.ai"):
         # NCBI requires an email parameter for contact if we hit rate limits
         self.email = email
+        self.client = HttpClient(email=self.email)
 
     def search_articles(self, keywords: List[str], max_results: int = 20) -> List[str]:
         """
@@ -35,7 +42,7 @@ class PubMedScraper:
         }
         
         try:
-            response = requests.get(f"{self.BASE_URL}/esearch.fcgi", params=params)
+            response = self.client.get(f"{self.BASE_URL}/esearch.fcgi", params=params)
             response.raise_for_status()
             data = response.json()
             return data.get("esearchresult", {}).get("idlist", [])
@@ -65,7 +72,7 @@ class PubMedScraper:
             }
             
             try:
-                response = requests.post(f"{self.BASE_URL}/efetch.fcgi", data=params) # Use POST for large ID lists
+                response = self.client.post(f"{self.BASE_URL}/efetch.fcgi", data=params)  # Use POST for large ID lists
                 response.raise_for_status()
                 
                 # Parse XML
